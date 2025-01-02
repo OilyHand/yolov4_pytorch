@@ -2,35 +2,20 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-class Activation(nn.Module):
-'''
-	Activation Funcitons
-	- mish
-	- leaky_relu
-'''
-	def __init__(self):
-		super(activation, self).__init__()
-	
-	def mish(self, x):
-		return F.mish(x)
-	
-	def leaky_relu(self, x):
-		return F.leaky_relu(x)
-
-
+## Dict of activation functions
 ACTIVATIONS = {
-	'leaky_relu' = Activation.leaky_relu(),
-	'mish' = Activation.mish()
+	'leaky_relu' : F.leaky_relu(),
+	'mish' : F.mish()
 }
 
 
 
 class CBA(nn.Module):
-'''
-	Convolutional Layer
-	- sequence: conv2d(C) -> batchnorm(B) -> activation(A)
-	- activation: mish(default) or leaky_relu
-'''
+	'''
+		Convolutional Layer
+		- sequence: conv2d(C) -> batchnorm(B) -> activation(A)
+		- activation: mish(default) or leaky_relu
+	'''
 	def __init__(self, in_channels, out_channels, kernel_size, stride=1, activation='mish'):
 		super(CBA, self).__init__()
 
@@ -46,31 +31,31 @@ class CBA(nn.Module):
 
 
 class Residual(nn.Module):
-'''
-	Residual Block
-'''
+	'''
+		Residual Block
+	'''
 	def __init__(self, in_channels, out_channels, hidden_channels=None):
 		super(Residual, self).__init__()
 
-	if hidden_channels is None:
-		hidden_channels = out_channels
-	
-	self.__block = nn.Sequential(
-		CBA(in_channels, hidden_channels, 1)
-		CBA(hidden_channels, out_channels, 3)
-	)
+		if hidden_channels is None:
+			hidden_channels = out_channels
+
+		self.__block = nn.Sequential(
+			CBA(in_channels, hidden_channels, 1),
+			CBA(hidden_channels, out_channels, 3)
+		)
 
 	def forward(self, x):
 		return x + self.__block(x)
 
 
 class CSP(nn.Module):
-'''
-	Cross Stage Partial block
-'''
+	'''
+		Cross Stage Partial block
+	'''
 	def __init__(self):
 		pass
-	
+
 	def forward(x):
 		pass
 
@@ -78,7 +63,7 @@ class CSP(nn.Module):
 class CSPDarkNet53(nn.Module):
 	def __init__(self):
 		pass
-	
+
 	def forward(x):
 		pass
 
